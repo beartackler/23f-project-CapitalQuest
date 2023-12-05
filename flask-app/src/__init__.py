@@ -30,16 +30,24 @@ def create_app():
     # Example: localhost:8001
     @app.route("/")
     def welcome():
-        return "<h1>Welcome to the 3200 boilerplate app</h1>"
+        return "<h1>Welcome to the Capital Quest platform</h1>"
 
     # Import the various Beluprint Objects
-    from src.customers.customers import customers
-    from src.products.products  import products
+    from flask import Flask
+    from .simulations import simulations
+    from .stocks import stocks
+    from .resumes import resumes
+    from .results import results
+    from .internships import internships
+    from .student_msg import student_msg
 
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
-    app.register_blueprint(customers,   url_prefix='/c')
-    app.register_blueprint(products,    url_prefix='/p')
-
-    # Don't forget to return the app object
+    app.register_blueprint(simulations, url_prefix='/simulations')
+    app.register_blueprint(stocks, url_prefix='/stocks')
+    app.register_blueprint(resumes, url_prefix='/resumes')
+    app.register_blueprint(results, url_prefix='/simulation_results')
+    app.register_blueprint(internships, url_prefix='/internships')
+    app.register_blueprint(student_msg, url_prefix='/student_messages')
+    
     return app
