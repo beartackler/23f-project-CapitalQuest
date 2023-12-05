@@ -3,7 +3,7 @@ from src import db
 
 resumes = Blueprint('resumes', __name__)
 
-# GET /resumes: Retrieve all resumes.
+# GET /resumes: getting all student resumes
 @resumes.route('/resumes', methods=['GET'])
 def get_all_resumes():
     cursor = db.get_db().cursor()
@@ -17,7 +17,7 @@ def get_all_resumes():
 
     return jsonify(json_data)
 
-# POST /resumes: Add a new resume.
+# POST /resumes: adding a new resume
 @resumes.route('/resumes', methods=['POST'])
 def add_new_resume():
     data = request.json
@@ -35,7 +35,7 @@ def add_new_resume():
 
     return jsonify({'status': 'Success', 'message': 'Resume added successfully'})
 
-# GET /resumes/<student_id>: Retrieve resume for a specific student.
+# GET /resumes/<student_id>: getting a resume for a specific student
 @resumes.route('/resumes/<int:student_id>', methods=['GET'])
 def get_resume(student_id):
     query = f'SELECT student_id, resume_content FROM resumes WHERE student_id = {student_id}'
@@ -52,7 +52,7 @@ def get_resume(student_id):
 
     return jsonify(json_data)
 
-# PUT /resumes/<student_id>: Update attached resume for a specific student.
+# PUT /resumes/<student_id>: updating an attached resume for a specific student
 @resumes.route('/resumes/<int:student_id>', methods=['PUT'])
 def update_resume(student_id):
     data = request.json
@@ -69,7 +69,7 @@ def update_resume(student_id):
 
     return jsonify({'status': 'Success', 'message': 'Resume updated successfully'})
 
-# DELETE /resumes/<student_id>: Remove attached resume for a specific student.
+# DELETE /resumes/<student_id>: removing an attached resume for a specific student
 @resumes.route('/resumes/<int:student_id>', methods=['DELETE'])
 def remove_resume(student_id):
     query = f'DELETE FROM resumes WHERE student_id = {student_id}'
