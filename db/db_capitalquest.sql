@@ -22,48 +22,48 @@ use capital_db;
 -- DDL
 -- Company table
 CREATE TABLE IF NOT EXISTS company (
-  name         VARCHAR(100) UNIQUE                NOT NULL,
-  email        VARCHAR(75),
-  phone        VARCHAR(100),
-  address      VARCHAR(255),
-  url          VARCHAR(255),
-  type         VARCHAR(255),
-  id           INTEGER AUTO_INCREMENT             NOT NULL,
-  CONSTRAINT pk_company PRIMARY KEY (id)
+    name         VARCHAR(100) UNIQUE                NOT NULL,
+    email        VARCHAR(75),
+    phone        VARCHAR(100),
+    address      VARCHAR(255),
+    url          VARCHAR(255),
+    type         VARCHAR(255),
+    id           INTEGER AUTO_INCREMENT             NOT NULL,
+    CONSTRAINT pk_company PRIMARY KEY (id)
 );
 
 -- Internship table
 CREATE TABLE IF NOT EXISTS internship (
-  id           INTEGER AUTO_INCREMENT             NOT NULL,
-  name         VARCHAR(255)                       NOT NULL,
-  description  TEXT,
-  url          VARCHAR(255),
-  companyId    INTEGER                            NOT NULL,
+    id           INTEGER AUTO_INCREMENT             NOT NULL,
+    name         VARCHAR(255)                       NOT NULL,
+    description  TEXT,
+    url          VARCHAR(255),
+    companyId    INTEGER                            NOT NULL,
 
-  INDEX uq_idx_int (companyId),
+    INDEX uq_idx_int (companyId),
 
-  CONSTRAINT pk_company PRIMARY KEY (id),
-  CONSTRAINT fk_int FOREIGN KEY (companyId)
-      REFERENCES company (id)
-      ON DELETE CASCADE
-      ON UPDATE CASCADE
+    CONSTRAINT pk_company PRIMARY KEY (id),
+    CONSTRAINT fk_int FOREIGN KEY (companyId)
+        REFERENCES company (id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 -- Recruiter table
 CREATE TABLE IF NOT EXISTS recruiter (
-  id           INTEGER AUTO_INCREMENT             NOT NULL,
-  firstName    VARCHAR(25)                        NOT NULL,
-  lastName     VARCHAR(40)                        NOT NULL,
-  email        VARCHAR(75),
-  companyId    INTEGER                            NOT NULL,
+    id           INTEGER AUTO_INCREMENT             NOT NULL,
+    firstName    VARCHAR(25)                        NOT NULL,
+    lastName     VARCHAR(40)                        NOT NULL,
+    email        VARCHAR(75),
+    companyId    INTEGER                            NOT NULL,
 
-  INDEX uq_idx_recruiter (companyId),
+    INDEX uq_idx_recruiter (companyId),
 
-  CONSTRAINT pk_recruiter PRIMARY KEY (id),
-  CONSTRAINT fk_int FOREIGN KEY (companyId)
-      REFERENCES company (id)
-      ON DELETE CASCADE
-      ON UPDATE CASCADE
+    CONSTRAINT pk_recruiter PRIMARY KEY (id),
+    CONSTRAINT fk_int FOREIGN KEY (companyId)
+        REFERENCES company (id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 -- Course table
@@ -118,9 +118,9 @@ CREATE TABLE IF NOT EXISTS professor (
 
     CONSTRAINT pk_prof PRIMARY KEY (id),
     CONSTRAINT fk_associated_course FOREIGN KEY (courseID)
-      REFERENCES course (id)
-      ON DELETE RESTRICT
-      ON UPDATE CASCADE
+        REFERENCES course (id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
 );
 -- Engineer table
 CREATE TABLE IF NOT EXISTS engineer(
@@ -147,9 +147,9 @@ CREATE TABLE IF NOT EXISTS simulation (
 
     CONSTRAINT pk_sim PRIMARY KEY (id),
     CONSTRAINT fk_associated_eng FOREIGN KEY (createdBy)
-      REFERENCES engineer (id)
-      ON DELETE RESTRICT
-      ON UPDATE CASCADE
+        REFERENCES engineer (id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
 );
 
 -- junction table for n:m course --> simulation
