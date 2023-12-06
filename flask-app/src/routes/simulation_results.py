@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, make_response
+from flask import Blueprint, jsonify, make_response, request, current_app
 from src import db
 
 results_bp = Blueprint('results', __name__)
@@ -13,6 +13,33 @@ def get_all_simulation_results():
     for row in cursor.fetchall():
         json_data.append(dict(zip(row_headers, row)))
     return make_response(jsonify(json_data), 200)
+
+@results_bp.route('/simulation_results/<int:student_id>', methods=['POST'])
+def add_results():
+    data = request.json
+    current_app.logger.info(data)
+
+    simId = data['simId']
+    studentId = data['studentId']
+    commission = data['commission']
+    pnl = data['pnl']
+    sr = data['sharpeRatio']
+    execScore = data['execScore']
+
+    query = 'INSERT INTO simulation_results(simId, studentId, commission, pnl, sharpeRatio, execScore) VALUES ("'
+    query += simId + ', '
+    query += studentId + ', '
+    query += commission + ', '
+    query += pnl + ', '
+    query += sr + ', '
+    query += execScore + ')'
+    current_app.logger.info(query)
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+
+    return 'Success!'
 
 @results_bp.route('/simulation_results/<int:student_id>', methods=['GET'])
 # getting simulations result for specific student
