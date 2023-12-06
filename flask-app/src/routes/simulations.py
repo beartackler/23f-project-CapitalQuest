@@ -3,17 +3,17 @@ from src import db
 
 simulations = Blueprint('simulations', __name__)
 
-# Get list of all available simulations #GET
+# Get list of all available simulations
 @simulations.route('/simulations', methods=['GET'])
 def get_simulations():
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT id, simulation_name, start_date, end_date FROM simulations')
-    column_headers = [x[0] for x in cursor.description]
+    cursor.execute('SELECT id, name, start_date, end_date FROM simulation')
+    row_headers = [x[0] for x in cursor.description]
     json_data = []
 
     the_data = cursor.fetchall()
     for row in the_data:
-        json_data.append(dict(zip(column_headers, row)))
+        json_data.append(dict(zip(row_headers, row)))
 
     return jsonify(json_data)
 

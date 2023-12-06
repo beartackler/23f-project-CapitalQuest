@@ -47,6 +47,5 @@ def create_app():
     app.register_blueprint(resumes, url_prefix='/resumes')
     app.register_blueprint(results, url_prefix='/simulation_results')
     app.register_blueprint(internships, url_prefix='/internships')
-    app.register_blueprint(student_msg, url_prefix='/student_messages')
     
     return app

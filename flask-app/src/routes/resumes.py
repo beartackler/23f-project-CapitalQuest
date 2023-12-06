@@ -1,13 +1,20 @@
 from flask import Blueprint, jsonify, request, current_app
+import json
 from src import db
 
 resumes = Blueprint('resumes', __name__)
 
 # GET /resumes: getting all student resumes
 @resumes.route('/resumes', methods=['GET'])
-def get_all_resumes():
+def get_all_resumespaths():
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT student_id, resume_content FROM resumes')
+
+    query = '''
+        SELECT resumePath
+        FROM student
+    '''
+    cursor.execute(query)
+
     column_headers = [x[0] for x in cursor.description]
     json_data = []
 
@@ -17,66 +24,56 @@ def get_all_resumes():
 
     return jsonify(json_data)
 
-# POST /resumes: adding a new resume
-@resumes.route('/resumes', methods=['POST'])
-def add_new_resume():
-    data = request.json
-    current_app.logger.info(data)
-
-    student_id = data['student_id']
-    resume_content = data['resume_content']
-
-    query = f'INSERT INTO resumes (student_id, resume_content) VALUES ({student_id}, "{resume_content}")'
-    current_app.logger.info(query)
-
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    db.get_db().commit()
-
-    return jsonify({'status': 'Success', 'message': 'Resume added successfully'})
 
 # GET /resumes/<student_id>: getting a resume for a specific student
-@resumes.route('/resumes/<int:student_id>', methods=['GET'])
-def get_resume(student_id):
-    query = f'SELECT student_id, resume_content FROM resumes WHERE student_id = {student_id}'
+@resumes.route('/resumes/<id>', methods=['GET'])
+def get_resumepath(student_id):
+    query = 'SELECT resumePath FROM student WHERE id = ' + str(id)
     current_app.logger.info(query)
 
     cursor = db.get_db().cursor()
     cursor.execute(query)
     column_headers = [x[0] for x in cursor.description]
     json_data = []
-
     the_data = cursor.fetchall()
     for row in the_data:
         json_data.append(dict(zip(column_headers, row)))
-
     return jsonify(json_data)
 
-# PUT /resumes/<student_id>: updating an attached resume for a specific student
-@resumes.route('/resumes/<int:student_id>', methods=['PUT'])
-def update_resume(student_id):
-    data = request.json
-    current_app.logger.info(data)
+# update specific student resume
+@resumes.route('/resumes/<id>', methods=['PUT','POST'])
+def update_resumepath(student_id):
+    
+    the_data = request.json
+    current_app.logger.info(the_data)
 
-    resume_content = data['resume_content']
+    if the_data is None:
+        return jsonify({"error": "Invalid request. 'resumePath' is required in the request body."}), 400
 
-    query = f'UPDATE resumes SET resume_content = "{resume_content}" WHERE student_id = {student_id}'
-    current_app.logger.info(query)
+    student = the_data['student_id']
+    resumePath = the_data['resumePath']
 
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
+    up_query = '''
+        "UPDATE student 
+        SET resumePath = %s 
+        WHERE id = %s"
+    '''
+    cursor.execute(up_query, (resumePath, student_id))
+    
     db.get_db().commit()
 
-    return jsonify({'status': 'Success', 'message': 'Resume updated successfully'})
+    return "successfully edited resumepath #{0}!"
 
-# DELETE /resumes/<student_id>: removing an attached resume for a specific student
-@resumes.route('/resumes/<int:student_id>', methods=['DELETE'])
-def remove_resume(student_id):
-    query = f'DELETE FROM resumes WHERE student_id = {student_id}'
-    current_app.logger.info(query)
+    @menu.route('/restaurants/<restaurant_id>/menu/<menu_item_id>', methods=['DELETE'])
+
+# delete student's profile
+@resumes.route('/resumes/<id>', methods=['DELETE'])
+def delete_restaurant(student_id):
+    up_query = 'UPDATE student SET resumePath = null WHERE id = ' + str(student_id)
+    current_app.logger.info(up_query)
 
     cursor = db.get_db().cursor()
-    cursor.execute(query)
+    cursor.execute(up_query)
     db.get_db().commit()
 
-    return jsonify({'status': 'Success', 'message': 'Resume removed successfully'})
+    return 'Success!'
