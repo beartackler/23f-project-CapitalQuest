@@ -33,13 +33,12 @@ def create_app():
         return "<h1>Welcome to the Capital Quest platform</h1>"
 
     # Import the various Beluprint Objects
-    from flask import Flask
-    from .simulations import simulations
-    from .stocks import stocks
-    from .resumes import resumes
-    from .results import results
-    from .internships import internships
-    from .student_msg import student_msg
+    from src.routes.simulations import simulations
+    from src.routes.stocks import stocks
+    from src.routes.resumes import resumes
+    from src.routes.simulation_results import results
+    from src.routes.internships import internships
+    from src.routes.student_msg import student_msg
 
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
