@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS internship (
     url          VARCHAR(255),
     company_id    INTEGER                            NOT NULL,
 
-    INDEX uq_idx_int (companyId),
+    INDEX uq_idx_int (company_id),
 
     CONSTRAINT pk_company PRIMARY KEY (internship_id),
     CONSTRAINT fk_int FOREIGN KEY (company_id)
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS recruiter (
     email        VARCHAR(75),
     company_id    INTEGER                           NOT NULL,
 
-    INDEX uq_idx_recruiter (companyId),
+    INDEX uq_idx_recruiter (company_id),
 
     CONSTRAINT pk_recruiter PRIMARY KEY (recruiter_id),
     CONSTRAINT fk_int FOREIGN KEY (company_id)
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS professor (
 
     INDEX uq_idx_recruiter (course_id),
 
-    CONSTRAINT pk_prof PRIMARY KEY (id),
+    CONSTRAINT pk_prof PRIMARY KEY (professor_id),
     CONSTRAINT fk_associated_course FOREIGN KEY (course_id)
         REFERENCES course (course_id)
         ON DELETE RESTRICT
@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS simulation_results
     CONSTRAINT pk_sim_res PRIMARY KEY (simId, studentId),
 
     CONSTRAINT fk_stock_1 FOREIGN KEY (simId) REFERENCES simulation (simulation_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_stock_2 FOREIGN KEY (studentId) REFERENCES student (simulation_id) ON UPDATE CASCADE ON DELETE CASCADE
+    CONSTRAINT fk_stock_2 FOREIGN KEY (studentId) REFERENCES student (student_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Add sample data. DON'T TOUCH YET
