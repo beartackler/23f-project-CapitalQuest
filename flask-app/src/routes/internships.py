@@ -21,7 +21,7 @@ def list_internships():
 def get_specific_internship(internship_id):
     # retrieve data for a specific internship
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT * FROM internship WHERE id = ?', (internship_id,))
+    cursor.execute('SELECT * FROM internship WHERE internship_id = ?', (internship_id,))
     row_headers = [x[0] for x in cursor.description]
     row = cursor.fetchone()
     if row:
@@ -30,14 +30,14 @@ def get_specific_internship(internship_id):
         return make_response(jsonify({'error': 'Internship not found'}), 404)
 
 
-@internships.route('/internships_available/company/<string:company_name>', methods=['DELETE'])
-def delete_internships_for_company(company_name):
+@internships.route('/internships_available/company/<string:company_id>', methods=['DELETE'])
+def delete_internships_for_company(company_id):
     # delete all internships for a specific company
     cursor = db.get_db().cursor()
     cursor.execute(
-        'DELETE FROM internship WHERE company_name = ?', (company_name,))
+        'DELETE FROM internship WHERE company_id = ?', (company_id,))
     db.get_db().commit()
-    return jsonify({'message': 'Internships deleted for company {}'.format(company_name)})
+    return jsonify({'message': 'Internships deleted for company {}'.format(company_id)})
 
 
 @internships.route('/internships_available/<int:internship_id>', methods=['PUT'])
@@ -45,8 +45,8 @@ def update_specific_internship(internship_id):
     # update a specific internship
     internship_data = request.json
     cursor = db.get_db().cursor()
-    cursor.execute('UPDATE internship SET title = ?, description = ?, other_details = ? WHERE id = ?',
-                   (internship_data['title'], internship_data['description'], internship_data.get('other_details', ''), internship_id))
+    cursor.execute('UPDATE internship SET name = ?, description = ?, url = ? WHERE id = ?',
+                   (internship_data['name'], internship_data['description'], internship_data.get('url', ''), internship_id))
     db.get_db().commit()
     return jsonify({'message': 'Internship updated successfully', 'id': internship_id})
 
@@ -56,7 +56,7 @@ def create_internship():
     # create a new internship
     internship_data = request.json
     cursor = db.get_db().cursor()
-    cursor.execute('INSERT INTO internship (title, description, other_details) VALUES (?, ?, ?)',
+    cursor.execute('INSERT INTO internship (name, description, url) VALUES (?, ?, ?)',
                    (internship_data['title'], internship_data['description'], internship_data.get('other_details', '')))
     db.get_db().commit()
     return make_response(jsonify({'id': cursor.lastrowid}), 201)
