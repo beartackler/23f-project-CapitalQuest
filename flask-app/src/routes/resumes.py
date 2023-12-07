@@ -26,7 +26,7 @@ def get_all_resumespaths():
 
 
 # GET /resumes/<student_id>: getting a resume for a specific student
-@resumes.route('/resumes/<id>', methods=['GET'])
+@resumes.route('/resumes/<student_id>', methods=['GET'])
 def get_resumepath(student_id):
     query = 'SELECT resumePath FROM student WHERE id = ' + str(id)
     current_app.logger.info(query)
@@ -41,7 +41,7 @@ def get_resumepath(student_id):
     return jsonify(json_data)
 
 # update specific student resume
-@resumes.route('/resumes/<id>', methods=['PUT','POST'])
+@resumes.route('/resumes/<student_id>', methods=['PUT','POST'])
 def update_resumepath(student_id):
     
     the_data = request.json
@@ -62,12 +62,10 @@ def update_resumepath(student_id):
     
     db.get_db().commit()
 
-    return "successfully edited resumepath #{0}!"
-
-    @menu.route('/restaurants/<restaurant_id>/menu/<menu_item_id>', methods=['DELETE'])
+    return "successfully edited resumepath #{0}!".format(student_id)
 
 # delete student's profile
-@resumes.route('/resumes/<id>', methods=['DELETE'])
+@resumes.route('/resumes/<student_id>', methods=['DELETE'])
 def delete_restaurant(student_id):
     up_query = 'UPDATE student SET resumePath = null WHERE id = ' + str(student_id)
     current_app.logger.info(up_query)
@@ -76,4 +74,4 @@ def delete_restaurant(student_id):
     cursor.execute(up_query)
     db.get_db().commit()
 
-    return 'Success!'
+    return "successfully deleted resumepath #{0}!".format(student_id)
