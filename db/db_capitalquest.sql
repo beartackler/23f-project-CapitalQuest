@@ -3,7 +3,9 @@
 -- Create a new database.  You can change the name later.  You'll
 -- need this name in the FLASK API file(s),  the AppSmith
 -- data source creation.
-create database if not exists capquest;
+drop database if exists capquest;
+
+create database capquest;
 
 -- Via the Docker Compose file, a special user called webapp will
 -- be created in MySQL. We are going to grant that user
@@ -109,7 +111,7 @@ CREATE TABLE IF NOT EXISTS professor (
     firstName   VARCHAR(25),
     lastName    VARCHAR(40),
     department  VARCHAR(50),
-    university  VARCHAR(50),
+    university  VARCHAR(75),
     email       VARCHAR(75)                        NOT NULL,
 
     INDEX uq_idx_recruiter (course_id),
@@ -194,9 +196,3 @@ CREATE TABLE IF NOT EXISTS simulation_results
     CONSTRAINT fk_stock_1 FOREIGN KEY (simId) REFERENCES simulation (simulation_id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_stock_2 FOREIGN KEY (studentId) REFERENCES student (student_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
-
--- Add sample data. DON'T TOUCH YET
--- we will duplicate in here to make sure its executed
-insert into stock (ticker, bidPrice, askPrice, eps, volume, beta) values ('LINU', 221.48, 222.51, 13, 846756, 0.17);
-insert into stock (ticker, bidPrice, askPrice, eps, volume, beta) values ('TRNC', 734.5, 737.06, 14, 516676, 0.76);
-insert into stock (ticker, bidPrice, askPrice, eps, volume, beta) values ('PIE', 593.73, 594.72, 12, 651984, 0.5);
