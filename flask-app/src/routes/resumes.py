@@ -47,22 +47,17 @@ def get_resumepath(student_id):
 @resumes.route('/resumes/<student_id>', methods=['PUT'])
 def update_resumepath(student_id):
 
-    the_data = request.json
+    the_data = request.get_json()
     current_app.logger.info(the_data)
 
     if the_data is None:
         return jsonify({"error": "Invalid request. 'resumePath' is required in the request body."}), 400
 
-    resumePath = the_data['resumePath']
-
-    up_query = '''
-        "UPDATE student 
-        SET resumePath = %s 
-        WHERE id = %s"
-    '''
-
     cursor = db.get_db().cursor()
-    cursor.execute(up_query, (resumePath, student_id))
+
+    query = 'UPDATE student SET resumePath = %s WHERE student_id = %s'
+    cursor.execute(query, (the_data['resumePath'], student_id))
+    
 
     db.get_db().commit()
 
@@ -72,7 +67,7 @@ def update_resumepath(student_id):
 @resumes.route('/resumes/<student_id>', methods=['POST'])
 def create_resumepath(student_id):
 
-    the_data = request.json
+    the_data = request.get_json()
     current_app.logger.info(the_data)
 
     if the_data is None:
@@ -95,12 +90,11 @@ def create_resumepath(student_id):
 # delete student's profil
 @resumes.route('/resumes/<student_id>', methods=['DELETE'])
 def delete_resumepath(student_id):
-    up_query = 'UPDATE student SET resumePath = null WHERE id = ' + \
-        str(student_id)
-    current_app.logger.info(up_query)
-
     cursor = db.get_db().cursor()
-    cursor.execute(up_query)
+    cursor.execute('DELETE FROM student WHERE student_id = %s', (student_id,))
     db.get_db().commit()
+    if cursor.rowcount == 0:
+        return jsonify({"message": "resume not found"}), 404
+    return jsonify({"message": "Profile deleted successfully"})
+    
 
-    return "successfully deleted resumepath #{0}!".format(student_id)
