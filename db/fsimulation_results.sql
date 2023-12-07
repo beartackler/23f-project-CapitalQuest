@@ -1,3 +1,5 @@
+use capquest;
+
 insert into simulation_results (simId, studentId, commission, pnl, sharpeRatio, execScore) values (3, 15, 106.33, 11.6, 0, 0.95);
 insert into simulation_results (simId, studentId, commission, pnl, sharpeRatio, execScore) values (17, 48, 513.56, 8.15, 0, 0.6);
 insert into simulation_results (simId, studentId, commission, pnl, sharpeRatio, execScore) values (16, 38, 861.93, 9.66, 2, 0.12);

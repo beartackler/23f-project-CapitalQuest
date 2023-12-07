@@ -1,3 +1,5 @@
+use capquest;
+
 insert into stock (ticker, bidPrice, askPrice, eps, volume, name, beta) values ('LINU', 221.48, 222.51, 13, 846756, 'Wealth Wisdom', 0.17);
 insert into stock (ticker, bidPrice, askPrice, eps, volume, name, beta) values ('TRNC', 734.5, 737.06, 14, 516676, 'Financial Foundations', 0.76);
 insert into stock (ticker, bidPrice, askPrice, eps, volume, name, beta) values ('PIE', 593.73, 594.72, 12, 651984, 'Financial Foundations', 0.5);
