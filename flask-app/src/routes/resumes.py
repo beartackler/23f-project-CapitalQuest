@@ -44,9 +44,7 @@ def get_resumepath(student_id):
     return jsonify(json_data)
 
 # update specific student resume
-
-
-@resumes.route('/resumes/<student_id>', methods=['PUT', 'POST'])
+@resumes.route('/resumes/<student_id>', methods=['PUT'])
 def update_resumepath(student_id):
 
     the_data = request.json
@@ -55,7 +53,6 @@ def update_resumepath(student_id):
     if the_data is None:
         return jsonify({"error": "Invalid request. 'resumePath' is required in the request body."}), 400
 
-    student = the_data['student_id']
     resumePath = the_data['resumePath']
 
     up_query = '''
@@ -63,6 +60,7 @@ def update_resumepath(student_id):
         SET resumePath = %s 
         WHERE id = %s"
     '''
+
     cursor = db.get_db().cursor()
     cursor.execute(up_query, (resumePath, student_id))
 
@@ -70,11 +68,33 @@ def update_resumepath(student_id):
 
     return "successfully edited resumepath #{0}!".format(student_id)
 
-# delete student's profile
+# create student resume
+@resumes.route('/resumes/<student_id>', methods=['POST'])
+def create_resumepath(student_id):
 
+    the_data = request.json
+    current_app.logger.info(the_data)
 
+    if the_data is None:
+        return jsonify({"error": "Invalid request. 'resumePath' is required in the request body."}), 400
+
+    resumePath = the_data['resumePath']
+
+    insert_query = '''
+        INSERT INTO student (id, resumePath) 
+        VALUES (%s, %s)
+    '''
+
+    cursor = db.get_db().cursor()
+    cursor.execute(insert_query, (student_id, resumePath))
+
+    db.get_db().commit()
+
+    return "successfully edited resumepath #{0}!".format(student_id)
+
+# delete student's profil
 @resumes.route('/resumes/<student_id>', methods=['DELETE'])
-def delete_restaurant(student_id):
+def delete_resumepath(student_id):
     up_query = 'UPDATE student SET resumePath = null WHERE id = ' + \
         str(student_id)
     current_app.logger.info(up_query)
