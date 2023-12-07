@@ -43,7 +43,7 @@ def delete_internships_for_company(company_id):
 @internships.route('/internships_available/<int:internship_id>', methods=['PUT'])
 def update_specific_internship(internship_id):
     # update a specific internship
-    internship_data = request.json
+    internship_data = request.get_json()
     cursor = db.get_db().cursor()
     cursor.execute('UPDATE internship SET name = ?, description = ?, url = ? WHERE id = ?',
                    (internship_data['name'], internship_data['description'], internship_data.get('url', ''), internship_id))
@@ -54,9 +54,9 @@ def update_specific_internship(internship_id):
 @internships.route('/internships_available', methods=['POST'])
 def create_internship():
     # create a new internship
-    internship_data = request.json
+    internship_data = request.get_json()
     cursor = db.get_db().cursor()
-    cursor.execute('INSERT INTO internship (name, description, url) VALUES (?, ?, ?)',
-                   (internship_data['title'], internship_data['description'], internship_data.get('other_details', '')))
+    query = 'INSERT INTO internship (name, description, url) VALUES (%s, %s, %s)'
+    cursor.execute(query, (internship_data['name'], internship_data['description'], internship_data['url']))
     db.get_db().commit()
-    return make_response(jsonify({'id': cursor.lastrowid}), 201)
+    return jsonify({"message": "internship created successfully"}), 201

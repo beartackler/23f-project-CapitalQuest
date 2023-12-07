@@ -71,7 +71,7 @@ def get_specific_result(student_id, simulation_id):
 # getting the top 10 students with the highest Sharpe ratio in all simulations    
 def get_top10_students_sharpe_ratio_all_simulations():
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT firstName, lastName FROM simulation_results sr JOIN student s ON sr.studentId = s.student_id ORDER BY sharpeRatio DESC LIMIT 10')
+    cursor.execute('SELECT firstName, lastName, resumePath FROM simulation_results sr JOIN student s ON sr.studentId = s.student_id ORDER BY sharpeRatio DESC LIMIT 10')
     col_headers = [x[0] for x in cursor.description]
     json_data = []
     for row in cursor.fetchall():
@@ -93,7 +93,7 @@ def get_top10_students_sharpe_ratio_specific_simulation(simId):
 # getting the top 10 students with the highest pnl in all simulations
 def get_top10_students_pnl_all_simulations():
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT firstName, lastName FROM simulation_results sr JOIN student s ON sr.studentId = s.student_id ORDER BY pnl DESC LIMIT 10')
+    cursor.execute('SELECT firstName, lastName, resumePath FROM simulation_results sr JOIN student s ON sr.studentId = s.student_id ORDER BY pnl DESC LIMIT 10')
     col_headers = [x[0] for x in cursor.description]
     json_data = []
     for row in cursor.fetchall():
