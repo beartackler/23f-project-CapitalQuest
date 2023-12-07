@@ -61,7 +61,7 @@ def update_simulation(simulation_id):
     data = request.json
     current_app.logger.info(data)
 
-    if the_data is None:
+    if data is None:
         return jsonify({"error": "Invalid request."}), 400
 
     name = data['name']
