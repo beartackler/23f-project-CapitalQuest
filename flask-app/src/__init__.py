@@ -34,18 +34,17 @@ def create_app():
 
     # Import the various Beluprint Objects
     from src.routes.simulations import simulations
-    from src.routes.stocks import stocks
+    #from src.routes.stocks import stocks
     from src.routes.resumes import resumes
     from src.routes.simulation_results import results
-    from src.routes.internships import internships
-    from src.routes.student_msg import student_msg
+    #from src.routes.internships import internships
 
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
     app.register_blueprint(simulations, url_prefix='/simulations')
-    app.register_blueprint(stocks, url_prefix='/stocks')
+    #app.register_blueprint(stocks, url_prefix='/stocks')
     app.register_blueprint(resumes, url_prefix='/resumes')
     app.register_blueprint(results, url_prefix='/simulation_results')
-    app.register_blueprint(internships, url_prefix='/internships')
+    #app.register_blueprint(internships, url_prefix='/internships')
     
     return app

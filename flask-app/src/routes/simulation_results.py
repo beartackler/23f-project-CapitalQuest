@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, make_response, request, current_app
 from src import db
 
-results_bp = Blueprint('results', __name__)
+results = Blueprint('results', __name__)
 
-@results_bp.route('/simulation_results', methods=['GET'])
+@results.route('/simulation_results', methods=['GET'])
 # getting all simulation results from a database
 def get_all_simulation_results():
     cursor = db.get_db().cursor()
@@ -14,7 +14,7 @@ def get_all_simulation_results():
         json_data.append(dict(zip(row_headers, row)))
     return make_response(jsonify(json_data), 200)
 
-@results_bp.route('/simulation_results', methods=['POST'])
+@results.route('/simulation_results', methods=['POST'])
 # adding results for a simulation by a student
 def add_results():
     data = request.json
@@ -42,18 +42,18 @@ def add_results():
 
     return 'Success!'
 
-@results_bp.route('/simulation_results/<int:student_id>', methods=['GET'])
-# getting simulations result for specific student
-def get_results_for_student(student_id):
+@results.route('/simulation_results/<studentId>', methods=['GET'])
+# getting all simulation results from a specific student
+def get_all_results_from_specific_student(studentId):
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT * FROM simulation_results WHERE student_id = ?', (student_id,))
-    row_headers = [x[0] for x in cursor.description]
+    cursor.execute('SELECT * FROM simulation_results WHERE studentId = ' + studentId)
+    col_headers = [x[0] for x in cursor.description]
     json_data = []
     for row in cursor.fetchall():
-        json_data.append(dict(zip(row_headers, row)))
-    return make_response(jsonify(json_data), 200)
+        json_data.append(dict(zip(col_headers, row)))
+    return jsonify(json_data)
 
-@results_bp.route('/simulation_results/<int:student_id>/<int:simulation_id>', methods=['GET'])
+@results.route('/simulation_results/<int:student_id>/<int:simulation_id>', methods=['GET'])
 # getting a specific simulation result for a student
 def get_specific_result(student_id, simulation_id):
     cursor = db.get_db().cursor()
@@ -67,7 +67,7 @@ def get_specific_result(student_id, simulation_id):
     else:
         return make_response(jsonify({'error': 'Result not found'}), 404)
 
-@results_bp.route('/simulation_results', methods=['GET'])
+@results.route('/simulation_results/topsharpe', methods=['GET'])
 # getting the top 10 students with the highest Sharpe ratio in all simulations    
 def get_top10_students_sharpe_ratio_all_simulations():
     cursor = db.get_db().cursor()
@@ -78,7 +78,7 @@ def get_top10_students_sharpe_ratio_all_simulations():
         json_data.append(dict(zip(col_headers, row)))
     return jsonify(json_data)
 
-@results_bp.route('/simulation_results/<simId>', methods=['GET'])
+@results.route('/simulation_results/topsharpe/<simId>', methods=['GET'])
 # getting the top 10 students with the highest Sharpe ratio in a specific simulation
 def get_top10_students_sharpe_ratio_specific_simulation(simId):
     cursor = db.get_db().cursor()
@@ -89,7 +89,7 @@ def get_top10_students_sharpe_ratio_specific_simulation(simId):
         json_data.append(dict(zip(col_headers, row)))
     return jsonify(json_data)
 
-@results_bp.route('/simulation_results', methods=['GET'])
+@results.route('/simulation_results/toppnl', methods=['GET'])
 # getting the top 10 students with the highest pnl in all simulations
 def get_top10_students_pnl_all_simulations():
     cursor = db.get_db().cursor()
@@ -100,7 +100,7 @@ def get_top10_students_pnl_all_simulations():
         json_data.append(dict(zip(col_headers, row)))
     return jsonify(json_data)
 
-@results_bp.route('/simulation_results/<simId>', methods=['GET'])
+@results.route('/simulation_results/toppnl/<simId>', methods=['GET'])
 # getting the top 10 students with the highest pnl in a specific simulation
 def get_top10_students_pnl_specific_simulation(simId):
     cursor = db.get_db().cursor()
@@ -111,7 +111,7 @@ def get_top10_students_pnl_specific_simulation(simId):
         json_data.append(dict(zip(col_headers, row)))
     return jsonify(json_data)
 
-@results_bp.route('/simulation_results/<simId>', methods=['GET'])
+@results.route('/simulation_results/<simId>', methods=['GET'])
 # getting all simulation results from a specific simulation
 def get_all_results_from_specific_simulation(simId):
     cursor = db.get_db().cursor()
@@ -122,20 +122,11 @@ def get_all_results_from_specific_simulation(simId):
         json_data.append(dict(zip(col_headers, row)))
     return jsonify(json_data)
 
-@results_bp.route('/simulation_results/<studentId>', methods=['GET'])
-# getting all simulation results from a specific student
-def get_all_results_from_specific_student(studentId):
-    cursor = db.get_db().cursor()
-    cursor.execute('SELECT * FROM simulation_results WHERE studentId = ' + studentId)
-    col_headers = [x[0] for x in cursor.description]
-    json_data = []
-    for row in cursor.fetchall():
-        json_data.append(dict(zip(col_headers, row)))
-    return jsonify(json_data)
 
-@results_bp.route('/simulation_results/<simId>', methods=['PUT'])
+
+@results.route('/simulation_results/<simId>', methods=['PUT'])
 # delete simulation results for specific simulation
-def delete_sim_results_specific_student(simId):
+def delete_sim_results_specific_sim(simId):
     data = request.json
     current_app.logger.info(data)
 
@@ -148,7 +139,7 @@ def delete_sim_results_specific_student(simId):
 
     return 'Success!'
 
-@results_bp.route('/simulation_results/<studentId>', methods=['PUT'])
+@results.route('/simulation_results/del/<studentId>', methods=['DELETE'])
 # delete simulation results for specific student
 def delete_sim_results_specific_student(studentId):
     data = request.json
@@ -163,7 +154,7 @@ def delete_sim_results_specific_student(studentId):
 
     return 'Success!'
 
-@results_bp.route('/simulation_results/<studentId>', methods=['PUT'])
+@results.route('/simulation_results/up/<studentId>', methods=['PUT'])
 # update simulation results for specific student
 def update_sim_results_specific_student(studentId):
     data = request.json

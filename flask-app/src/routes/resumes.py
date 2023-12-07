@@ -58,6 +58,7 @@ def update_resumepath(student_id):
         SET resumePath = %s 
         WHERE id = %s"
     '''
+    cursor = db.get_db().cursor()
     cursor.execute(up_query, (resumePath, student_id))
     
     db.get_db().commit()
