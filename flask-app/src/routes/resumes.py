@@ -5,6 +5,8 @@ from src import db
 resumes = Blueprint('resumes', __name__)
 
 # GET /resumes: getting all student resumes
+
+
 @resumes.route('/resumes', methods=['GET'])
 def get_all_resumespaths():
     cursor = db.get_db().cursor()
@@ -28,7 +30,8 @@ def get_all_resumespaths():
 # GET /resumes/<student_id>: getting a resume for a specific student
 @resumes.route('/resumes/<student_id>', methods=['GET'])
 def get_resumepath(student_id):
-    query = 'SELECT resumePath FROM student WHERE id = ' + str(id)
+    query = 'SELECT resumePath FROM student WHERE student_id = ' + \
+        str(student_id)
     current_app.logger.info(query)
 
     cursor = db.get_db().cursor()
@@ -41,9 +44,11 @@ def get_resumepath(student_id):
     return jsonify(json_data)
 
 # update specific student resume
-@resumes.route('/resumes/<student_id>', methods=['PUT','POST'])
+
+
+@resumes.route('/resumes/<student_id>', methods=['PUT', 'POST'])
 def update_resumepath(student_id):
-    
+
     the_data = request.json
     current_app.logger.info(the_data)
 
@@ -60,15 +65,18 @@ def update_resumepath(student_id):
     '''
     cursor = db.get_db().cursor()
     cursor.execute(up_query, (resumePath, student_id))
-    
+
     db.get_db().commit()
 
     return "successfully edited resumepath #{0}!".format(student_id)
 
 # delete student's profile
+
+
 @resumes.route('/resumes/<student_id>', methods=['DELETE'])
 def delete_restaurant(student_id):
-    up_query = 'UPDATE student SET resumePath = null WHERE id = ' + str(student_id)
+    up_query = 'UPDATE student SET resumePath = null WHERE id = ' + \
+        str(student_id)
     current_app.logger.info(up_query)
 
     cursor = db.get_db().cursor()
