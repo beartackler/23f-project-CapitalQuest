@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS simulation (
     startingBal DECIMAL(10,2),
     endDate     DATETIME ON UPDATE CURRENT_TIMESTAMP,
     desc        TINYTEXT,
-    createdBy   INTEGER                            NOT NULL,
+    createdBy   INTEGER,
     name        VARCHAR(255),
     startDate   DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     status      VARCHAR(50),

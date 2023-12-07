@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request, current_app
+import json
 from src import db
 
 simulations = Blueprint('simulations', __name__)
@@ -7,13 +8,13 @@ simulations = Blueprint('simulations', __name__)
 @simulations.route('/simulations', methods=['GET'])
 def get_simulations():
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT id, name, start_date, end_date FROM simulation')
-    row_headers = [x[0] for x in cursor.description]
+    cursor.execute('SELECT simulation_id, name, startDate, endDate FROM simulation')
+    column_headers = [x[0] for x in cursor.description]
     json_data = []
 
     the_data = cursor.fetchall()
     for row in the_data:
-        json_data.append(dict(zip(row_headers, row)))
+        json_data.append(dict(zip(column_headers, row)))
 
     return jsonify(json_data)
 
@@ -23,11 +24,12 @@ def create_simulation():
     data = request.json
     current_app.logger.info(data)
 
-    name = data['simulation_name']
-    start_date = data['start_date']
-    end_date = data['end_date']
+    name = data['name']
+    startDate = data['startDate']
+    endDate = data['enddate']
 
-    query = f'INSERT INTO simulations (simulation_name, start_date, end_date) VALUES ("{name}", "{start_date}", "{end_date}")'
+
+    query = f'INSERT INTO simulation (name, startDate, endDate) VALUES ("{name}", "{startDate}", "{endDate}")'
     current_app.logger.info(query)
 
     cursor = db.get_db().cursor()
@@ -37,9 +39,9 @@ def create_simulation():
     return jsonify({'status': 'Success', 'message': 'Simulation created successfully'})
 
 # View parameters for a specific simulation #GET
-@simulations.route('/simulations/<int:simulation_id>', methods=['GET'])
+@simulations.route('/simulations/<simulation_id>', methods=['GET'])
 def view_simulation(simulation_id):
-    query = f'SELECT id, simulation_name, start_date, end_date FROM simulations WHERE id = {simulation_id}'
+    query = f'SELECT simulation_id, name, startDate, endDate FROM simulation WHERE id = {simulation_id}'
     current_app.logger.info(query)
 
     cursor = db.get_db().cursor()
@@ -59,13 +61,17 @@ def update_simulation(simulation_id):
     data = request.json
     current_app.logger.info(data)
 
-    name = data['simulation_name']
-    start_date = data['start_date']
-    end_date = data['end_date']
+    if the_data is None:
+        return jsonify({"error": "Invalid request."}), 400
+
+    name = data['name']
+    startDate = data['startDate']
+    endDate = data['endDate']
+    startingBal = data['startingBal']
 
     query = f'''
         UPDATE simulations
-        SET simulation_name = "{name}", start_date = "{start_date}", end_date = "{end_date}"
+        SET simulation_name = "{name}", startDate = "{startDate}", endDate = "{endDate}", startingBal = "{startingBal}"
         WHERE id = {simulation_id}
     '''
     current_app.logger.info(query)
