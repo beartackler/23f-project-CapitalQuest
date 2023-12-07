@@ -11,7 +11,7 @@ def get_stocks():
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of products
-    cursor.execute('SELECT * FROM stocks')
+    cursor.execute('SELECT * FROM stock')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
